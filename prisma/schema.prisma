@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  role      String     @default("operador") // admin, gerente, operador
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Funcionario {
+  id           String   @id @default(cuid())
+  nome         String
+  funcao       String
+  grupo        String   // TA ou JV
+  turno        String
+  salario      Float
+  admissao     String?
+  cpf          String?
+  telefone     String?
+  ativo        Boolean  @default(true)
+  dataSaida    String?
+  motivoSaida  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("funcionarios")
+}
+
+model Carga {
+  id         String   @id @default(cuid())
+  data       String
+  colhedora  String
+  talhao     String?
+  bruto      Float
+  tara       Float
+  liquido    Float
+  motorista  String?
+  destino    String?
+  ticket     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("cargas")
+}
+
+model Diesel {
+  id        String   @id @default(cuid())
+  tipo      String   // estoque, saida, entrada
+  data      String
+  veiculo   String?
+  litros    Float
+  resp      String
+  obs       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("diesel")
+}
+
+model FolhaPagamento {
+  id        String   @id @default(cuid())
+  mes       String   // YYYY-MM
+  nome      String
+  funcao    String
+  valor     Float
+  status    String   // "A pagar" ou "Pago"
+  grupo     String   // TA ou JV
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("folha_pagamento")
+}
+
+model Tesouraria {
+  id          String   @id @default(cuid())
+  tipo        String   // Pagar, Receber
+  desc        String
+  fornecedor  String
+  valor       Float
+  venc        String
+  status      String   // Pago, Pendente
+  parcela     String?
+  categoria   String
+  maquina     String?
+  pgto        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("tesouraria")
+}
+
+model EscalaTrabalho {
+  id        String   @id @default(cuid())
+  data      String
+  nome      String
+  turno     String   // Diurno, Noturno, Folga, Férias
+  maquina   String?
+  obs       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("escala_trabalho")
+}
+
+model Ciclo {
+  id          String   @id @default(cuid())
+  ref         String
+  ini         String
+  fim         String
+  ton         Float
+  pColheita   Float
+  pTransbordo Float
+  dieLts      Float
+  diePre      Float
+  etaLts      Float
+  etaPre      Float
+  etaRetro    Float
+  iss         Float
+  brutoCol    Float
+  brutoTrans  Float
+  subtotal    Float
+  dedDiesel   Float
+  dedEtanol   Float
+  dedEtaRetro Float
+  baseISS     Float
+  valorISS    Float
+  liquido     Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("ciclos")
+}
